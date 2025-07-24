@@ -11,7 +11,7 @@ import { usePermission } from '@/hooks/use-permission';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Cog, Folder, Home, LayoutGrid, Menu, Search, Users, Shield, Key } from 'lucide-react';
+import { BookOpen, Cog, Folder, Home, LayoutGrid, Menu, Search, Users, Shield, Key, Building, MonitorSpeaker, Tv, UserCheck, Timer } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
@@ -20,6 +20,49 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: '/dashboard',
         icon: Home,
+    },
+    {
+        title: 'Antrian',
+        href: '/antrian',
+        icon: Timer,
+        children: [
+            {
+                title: 'Dashboard Antrian',
+                href: '/antrian',
+                icon: Home,
+                permission: 'dashboard.antrian',
+            },
+            {
+                title: 'Ruangan',
+                href: '/antrian/rooms',
+                icon: Building,
+                permission: 'room.view',
+            },
+            {
+                title: 'Loket',
+                href: '/antrian/counters',
+                icon: MonitorSpeaker,
+                permission: 'counter.view',
+            },
+            {
+                title: 'Queue Management',
+                href: '/antrian/queues',
+                icon: LayoutGrid,
+                permission: 'queue.view',
+            },
+            {
+                title: 'Display ',
+                href: '/antrian/display',
+                icon: Tv,
+                permission: 'display.view',
+            },
+            {
+                title: 'Dashboard Operator',
+                href: '/antrian/operator/compact',
+                icon: UserCheck,
+                permission: 'operator.dashboard',
+            },
+        ],
     },
     {
         title: 'Settings',
