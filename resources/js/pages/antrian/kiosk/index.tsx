@@ -3,6 +3,7 @@ import { Building, Users, Clock, ArrowRight, Ticket, QrCode } from "lucide-react
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import AppLogoIcon from "@/components/app-logo-icon";
 
 interface Room {
     id: number;
@@ -22,17 +23,18 @@ export default function KioskIndex({ rooms }: Props) {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
             <Head title="Kiosk Antrian - Pilih Layanan" />
-            
+
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
-                <div className="max-w-7xl mx-auto px-4 py-6">
-                    <div className="text-center">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                            Sistem Antrian Digital
-                        </h1>
-                        <p className="text-xl text-gray-600">
+                <div className="max-w-7xl mx-auto px-4 py-6 ">
+                    <div className="flex text-center space-x-4">
+                        <AppLogoIcon className="size-10 fill-current text-blue-600" />
+                        <span>
+                            <h1 className="text-3xl font-bold">Klinik Rawat Inap Utama Muhammadiyah Kedungadem</h1>
+                        </span>
+                        {/* <p className="text-xl text-gray-600">
                             Pilih layanan yang ingin Anda gunakan
-                        </p>
+                        </p> */}
                     </div>
                 </div>
             </div>
@@ -40,7 +42,7 @@ export default function KioskIndex({ rooms }: Props) {
             {/* Main Content */}
             <div className="max-w-7xl mx-auto px-4 py-8">
                 {/* Instructions */}
-                <Card className="mb-8 border-blue-200 bg-blue-50">
+                {/* <Card className="mb-8 border-blue-200 bg-blue-50">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-blue-800">
                             <QrCode className="h-6 w-6" />
@@ -55,14 +57,14 @@ export default function KioskIndex({ rooms }: Props) {
                             <li>Tunggu hingga nomor Anda dipanggil</li>
                         </ol>
                     </CardContent>
-                </Card>
+                </Card> */}
 
                 {/* Room Selection */}
                 <div className="mb-8">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
                         Pilih Ruangan Layanan
                     </h2>
-                    
+
                     {rooms && rooms.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {rooms.map((room) => (
@@ -132,7 +134,7 @@ export default function KioskIndex({ rooms }: Props) {
                                             </div>
 
                                             {/* Action Button */}
-                                            <Button 
+                                            <Button
                                                 className="w-full bg-blue-600 hover:bg-blue-700"
                                                 disabled={room.counters_count === 0}
                                             >
@@ -160,7 +162,7 @@ export default function KioskIndex({ rooms }: Props) {
                 </div>
 
                 {/* Quick Actions */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card className="border-green-200 bg-green-50">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-green-800">
@@ -198,15 +200,25 @@ export default function KioskIndex({ rooms }: Props) {
                             </Button>
                         </CardContent>
                     </Card>
+                </div> */}
+
+                <div className="mt-8 text-center">
+                    <Card className="bg-gray-50 border-gray-200">
+                        <CardContent className="p-4">
+                            <div className="max-w-7xl mx-auto px-4 py-6 text-center text-gray-600">
+                                <p>&copy; 2025 Klinik Rawat Inap Utama Muhammadiyah Kedungadem. Semua hak dilindungi.</p>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
 
             {/* Footer */}
-            <div className="bg-white border-t mt-12">
+            {/* <div className="bg-white border-t mt-12">
                 <div className="max-w-7xl mx-auto px-4 py-6 text-center text-gray-600">
                     <p>&copy; 2025 Sistem Antrian Digital. Semua hak dilindungi.</p>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

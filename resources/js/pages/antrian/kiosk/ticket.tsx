@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import QRCodeComponent from "@/components/QRCode";
+import AppLogoIcon from "@/components/app-logo-icon";
 
 interface Room {
     id: number;
@@ -53,6 +54,16 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
     useEffect(() => {
         // Check if browser supports printing
         setCanPrint(typeof window !== 'undefined' && typeof window.print === 'function');
+        
+        // Auto print when page loads
+        if (typeof window !== 'undefined' && typeof window.print === 'function') {
+            // Small delay to ensure the page is fully rendered
+            const printTimer = setTimeout(() => {
+                window.print();
+            }, 1000);
+            
+            return () => clearTimeout(printTimer);
+        }
     }, []);
 
     const handlePrint = () => {
@@ -88,32 +99,131 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
             {/* Print Styles */}
             <style>{`
                 @media print {
+                    * {
+                        -webkit-print-color-adjust: exact !important;
+                        color-adjust: exact !important;
+                    }
+                    
                     body * {
                         visibility: hidden;
                     }
+                    
                     .print-area, .print-area * {
                         visibility: visible;
                     }
+                    
                     .print-area {
                         position: absolute;
-                        left: 50%;
-                        top: 50%;
-                        transform: translate(-50%, -50%);
+                        left: 0;
+                        top: 0;
                         width: 80mm;
-                        max-width: 300px;
+                        max-width: 80mm;
                         margin: 0;
                         padding: 0;
+                        transform: none;
+                        background: white;
                     }
+                    
                     .no-print {
                         display: none !important;
                     }
+                    
                     @page {
-                        size: A4;
+                        size: 80mm auto;
                         margin: 0;
                     }
+                    
                     body {
                         margin: 0;
                         padding: 0;
+                        background: white;
+                    }
+                    
+                    /* Remove extra spacing and borders for QR section */
+                    #statusAntrian {
+                        padding-top: 8px !important;
+                        margin-top: 8px !important;
+                    }
+                    
+                    #statusAntrian .border-t {
+                        border-top: 1px solid #e5e7eb !important;
+                    }
+                    
+                    #statusAntrian .pt-4 {
+                        padding-top: 8px !important;
+                    }
+                    
+                    #statusAntrian .mt-4 {
+                        margin-top: 8px !important;
+                    }
+                    
+                    /* Optimize card for printing */
+                    .print-area .border-2 {
+                        border: 1px solid #d1d5db !important;
+                    }
+                    
+                    .print-area .border-dashed {
+                        border-style: solid !important;
+                    }
+                    
+                    .print-area .shadow-xl {
+                        box-shadow: none !important;
+                    }
+                    
+                    .print-area .p-8 {
+                        padding: 16px !important;
+                    }
+                    
+                    /* Ensure text is readable */
+                    .print-area .text-6xl {
+                        font-size: 48px !important;
+                        line-height: 1.1 !important;
+                    }
+                    
+                    .print-area .text-2xl {
+                        font-size: 20px !important;
+                    }
+                    
+                    .print-area .text-lg {
+                        font-size: 16px !important;
+                    }
+                    
+                    .print-area .text-sm {
+                        font-size: 12px !important;
+                    }
+                    
+                    .print-area .text-xs {
+                        font-size: 10px !important;
+                    }
+                    
+                    /* Ensure backgrounds print */
+                    .print-area .bg-blue-50 {
+                        background-color: #eff6ff !important;
+                    }
+                    
+                    .print-area .bg-gray-50 {
+                        background-color: #f9fafb !important;
+                    }
+                    
+                    .print-area .bg-orange-50 {
+                        background-color: #fff7ed !important;
+                    }
+                    
+                    /* Compact spacing for print */
+                    .print-area .mb-6 {
+                        margin-bottom: 12px !important;
+                    }
+                    
+                    .print-area .space-y-4 > * + * {
+                        margin-top: 8px !important;
+                    }
+                    
+                    .print-area .p-3 {
+                        padding: 6px !important;
+                    }
+                    
+                    .print-area .gap-3 {
+                        gap: 6px !important;
                     }
                 }
             `}</style>
@@ -155,11 +265,42 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
             {/* Content */}
             <div className="container mx-auto px-6 py-8">
                 {/* Success Message - No Print */}
-                <div className="text-center mb-8 no-print">
+                {/* <div className="text-center mb-8 no-print">
                     <div className="inline-flex items-center gap-3 bg-green-100 text-green-800 px-6 py-3 rounded-full">
                         <CheckCircle className="h-6 w-6" />
                         <span className="font-semibold text-lg">Nomor antrian berhasil dibuat!</span>
                     </div>
+                </div> */}
+
+                {/* Action Buttons - No Print */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 no-print mb-6">
+                    {canPrint && (
+                        <Button 
+                            onClick={handlePrint}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3"
+                        >
+                            <Printer className="mr-2 h-5 w-5" />
+                            Cetak Tiket
+                        </Button>
+                    )}
+                    
+                    <Button 
+                        onClick={handleNewTicket}
+                        variant="outline"
+                        className="font-semibold px-8 py-3"
+                    >
+                        <RefreshCw className="mr-2 h-5 w-5" />
+                        Ambil Nomor Lagi
+                    </Button>
+                    
+                    {/* <Button 
+                        onClick={handleHome}
+                        variant="outline"
+                        className="font-semibold px-8 py-3"
+                    >
+                        <Home className="mr-2 h-5 w-5" />
+                        Selesai
+                    </Button> */}
                 </div>
 
                 {/* Ticket - Print Area */}
@@ -169,7 +310,7 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
                             {/* Header */}
                             <div className="mb-6 border-b border-gray-200 pb-4">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                                    RUMAH SAKIT
+                                    <AppLogoIcon className="inline-block h-8 w-8 mr-2" />
                                 </h2>
                                 <p className="text-lg font-semibold text-blue-600">
                                     TIKET ANTRIAN
@@ -246,7 +387,7 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
                             </div>
 
                             {/* QR Code for Status Tracking */}
-                            <div className="border-t border-gray-200 pt-4 mt-4">
+                            <div id="statusAntrian" className="border-t border-gray-200 pt-4 mt-4">
                                 <div className="text-center">
                                     <p className="text-xs text-gray-600 mb-2 font-semibold flex items-center justify-center gap-1">
                                         <QrCode className="h-3 w-3" />
@@ -283,37 +424,6 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
                             </div>
                         </CardContent>
                     </Card>
-                </div>
-
-                {/* Action Buttons - No Print */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 no-print">
-                    {canPrint && (
-                        <Button 
-                            onClick={handlePrint}
-                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3"
-                        >
-                            <Printer className="mr-2 h-5 w-5" />
-                            Cetak Tiket
-                        </Button>
-                    )}
-                    
-                    <Button 
-                        onClick={handleNewTicket}
-                        variant="outline"
-                        className="font-semibold px-8 py-3"
-                    >
-                        <RefreshCw className="mr-2 h-5 w-5" />
-                        Ambil Nomor Lagi
-                    </Button>
-                    
-                    <Button 
-                        onClick={handleHome}
-                        variant="outline"
-                        className="font-semibold px-8 py-3"
-                    >
-                        <Home className="mr-2 h-5 w-5" />
-                        Selesai
-                    </Button>
                 </div>
 
                 {/* Important Notes - No Print */}

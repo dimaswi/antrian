@@ -3,7 +3,7 @@ import { MonitorSpeaker, ArrowLeft, Printer, Users, Clock, Building } from "luci
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface Room {
@@ -34,6 +34,16 @@ interface Props {
 export default function KioskSelectCounter({ room, counters }: Props) {
     const [selectedCounter, setSelectedCounter] = useState<Counter | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    // Update time every second
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     const handleCounterSelect = (counter: Counter) => {
         // Prevent double submission
@@ -114,7 +124,7 @@ export default function KioskSelectCounter({ room, counters }: Props) {
                             <Button
                                 variant="outline"
                                 onClick={handleBack}
-                                className="p-2"
+                                className="p-2 border border-black"
                                 disabled={isProcessing}
                             >
                                 <ArrowLeft className="h-5 w-5" />
@@ -133,10 +143,10 @@ export default function KioskSelectCounter({ room, counters }: Props) {
                         </div>
                         <div className="text-right">
                             <div className="text-2xl font-bold text-blue-600">
-                                {new Date().toLocaleTimeString('id-ID')}
+                                {currentTime.toLocaleTimeString('id-ID')}
                             </div>
                             <div className="text-gray-600">
-                                {new Date().toLocaleDateString('id-ID', {
+                                {currentTime.toLocaleDateString('id-ID', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -151,7 +161,7 @@ export default function KioskSelectCounter({ room, counters }: Props) {
             {/* Content */}
             <div className="container mx-auto px-6 py-8">
                 {/* Instructions */}
-                <Card className="mb-8 bg-blue-50 border-blue-200">
+                {/* <Card className="mb-8 bg-blue-50 border-blue-200">
                     <CardContent className="p-6">
                         <div className="text-center">
                             <h2 className="text-2xl font-bold text-blue-700 mb-2">
@@ -162,7 +172,7 @@ export default function KioskSelectCounter({ room, counters }: Props) {
                             </p>
                         </div>
                     </CardContent>
-                </Card>
+                </Card> */}
 
                 {/* Room Info */}
                 <Card className="mb-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white">
@@ -196,12 +206,8 @@ export default function KioskSelectCounter({ room, counters }: Props) {
                                 }`}
                                 onClick={() => !isDisabled && handleCounterSelect(counter)}
                             >
-                                <CardHeader className={`rounded-t-lg text-white ${
-                                    counter.is_active 
-                                        ? 'bg-gradient-to-r from-green-500 to-green-600' 
-                                        : 'bg-gradient-to-r from-gray-400 to-gray-500'
-                                }`}>
-                                    <CardTitle className="flex items-center gap-3">
+                                <CardHeader>
+                                    <CardTitle className="flex gap-3">
                                         <MonitorSpeaker className="h-6 w-6" />
                                         <div>
                                             <div className="text-xl font-bold">{counter.name}</div>

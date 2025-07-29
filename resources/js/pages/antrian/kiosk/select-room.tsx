@@ -3,7 +3,7 @@ import { Building, ArrowLeft, Printer, Users, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Room {
     id: number;
@@ -21,6 +21,16 @@ interface Props {
 
 export default function KioskSelectRoom({ rooms }: Props) {
     const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    // Update time every second
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     const handleRoomSelect = (room: Room) => {
         router.visit(`/antrian/kiosk/room/${room.id}/select-counter`);
@@ -55,10 +65,10 @@ export default function KioskSelectRoom({ rooms }: Props) {
                         </div>
                         <div className="text-right">
                             <div className="text-2xl font-bold text-blue-600">
-                                {new Date().toLocaleTimeString('id-ID')}
+                                {currentTime.toLocaleTimeString('id-ID')}
                             </div>
                             <div className="text-gray-600">
-                                {new Date().toLocaleDateString('id-ID', {
+                                {currentTime.toLocaleDateString('id-ID', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -73,7 +83,7 @@ export default function KioskSelectRoom({ rooms }: Props) {
             {/* Content */}
             <div className="container mx-auto px-6 py-8">
                 {/* Instructions */}
-                <Card className="mb-8 bg-blue-50 border-blue-200">
+                {/* <Card className="mb-8 bg-blue-50 border-blue-200">
                     <CardContent className="p-6">
                         <div className="text-center">
                             <h2 className="text-2xl font-bold text-blue-700 mb-2">
@@ -84,7 +94,7 @@ export default function KioskSelectRoom({ rooms }: Props) {
                             </p>
                         </div>
                     </CardContent>
-                </Card>
+                </Card> */}
 
                 {/* Room Selection */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -94,8 +104,8 @@ export default function KioskSelectRoom({ rooms }: Props) {
                             className="cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-blue-300"
                             onClick={() => handleRoomSelect(room)}
                         >
-                            <CardHeader className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-t-lg">
-                                <CardTitle className="flex items-center gap-3">
+                            <CardHeader>
+                                <CardTitle className="flex gap-3">
                                     <Building className="h-6 w-6" />
                                     <div>
                                         <div className="text-xl font-bold">{room.name}</div>
@@ -188,7 +198,7 @@ export default function KioskSelectRoom({ rooms }: Props) {
             </div>
 
             {/* Footer */}
-            <div className="bg-white border-t mt-16">
+            {/* <div className="bg-white border-t mt-16">
                 <div className="container mx-auto px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="text-sm text-gray-500">
@@ -202,7 +212,7 @@ export default function KioskSelectRoom({ rooms }: Props) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
