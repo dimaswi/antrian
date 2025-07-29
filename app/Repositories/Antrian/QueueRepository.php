@@ -113,17 +113,21 @@ class QueueRepository implements QueueRepositoryInterface
      */
     public function create(array $data): Queue
     {
+        $queueDate = $data['queue_date'] ?? today();
+        
         // Generate next sequence number for the counter on the given date
         $lastSequence = Queue::where('counter_id', $data['counter_id'])
-            ->whereDate('queue_date', $data['queue_date'] ?? today())
+            ->whereDate('queue_date', $queueDate)
             ->max('number_sequence');
 
         $data['number_sequence'] = ($lastSequence ?? 0) + 1;
+        $data['queue_date'] = $queueDate;
 
-        // Generate queue number if not provided
+        // Generate queue number based on the sequence for the day
         if (!isset($data['queue_number'])) {
-            $counter = Counter::find($data['counter_id']);
-            $data['queue_number'] = $counter->getNextQueueNumber();
+            $counter = Counter::with('room')->find($data['counter_id']);
+            $roomPrefix = $counter->room->prefix ?? 'R';
+            $data['queue_number'] = $roomPrefix . $counter->id . str_pad($data['number_sequence'], 3, '0', STR_PAD_LEFT);
         }
 
         return Queue::create($data);

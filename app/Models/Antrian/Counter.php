@@ -81,9 +81,15 @@ class Counter extends Model
      */
     public function getNextQueueNumber(): string
     {
-        $this->increment('current_queue_number');
+        // Get the next sequence number for today
+        $nextSequence = \App\Models\Antrian\Queue::where('counter_id', $this->id)
+            ->whereDate('queue_date', today())
+            ->max('number_sequence');
+        
+        $nextSequence = ($nextSequence ?? 0) + 1;
+        
         $roomPrefix = $this->room->prefix ?? 'R';
-        return $roomPrefix . $this->id . str_pad($this->current_queue_number, 3, '0', STR_PAD_LEFT);
+        return $roomPrefix . $this->id . str_pad($nextSequence, 3, '0', STR_PAD_LEFT);
     }
 
     /**
