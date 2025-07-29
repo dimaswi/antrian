@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import laravel from 'laravel-vite-plugin';
+import mkcert from 'vite-plugin-mkcert';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 
@@ -13,6 +14,7 @@ export default defineConfig({
         }),
         react(),
         tailwindcss(),
+        mkcert(),
     ],
     esbuild: {
         jsx: 'automatic',
