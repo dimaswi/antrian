@@ -117,6 +117,7 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
                         left: 0;
                         top: 0;
                         width: 80mm;
+                        height: 130mm;
                         max-width: 80mm;
                         margin: 0;
                         padding: 0;
@@ -305,16 +306,16 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
 
                 {/* Ticket - Print Area */}
                 <div className="print-area max-w-md mx-auto">
-                    <Card className="border-2 border-dashed border-gray-300 bg-white shadow-xl">
-                        <CardContent className="p-8 text-center">
+                    <Card className="bg-white shadow-xl">
+                        <CardContent className="p-2 text-center">
                             {/* Header */}
-                            <div className="mb-6 border-b border-gray-200 pb-4">
+                            <div className="mb-2 pb-2">
                                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
                                     <AppLogoIcon className="inline-block h-8 w-8 mr-2" />
                                 </h2>
-                                <p className="text-lg font-semibold text-blue-600">
+                                {/* <p className="text-lg font-semibold text-blue-600">
                                     TIKET ANTRIAN
-                                </p>
+                                </p> */}
                                 <p className="text-sm text-gray-500">
                                     {new Date(queue.created_at).toLocaleDateString('id-ID', {
                                         weekday: 'long',
@@ -334,7 +335,7 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
                             </div>
 
                             {/* Details */}
-                            <div className="space-y-4 text-left mb-6">
+                            {/* <div className="space-y-4 text-left mb-6">
                                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                     <Building className="h-5 w-5 text-gray-600" />
                                     <div>
@@ -373,10 +374,10 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
                                         <p className="font-semibold text-blue-800">{estimated_wait_time || 0} menit</p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             {/* Instructions */}
-                            <div className="border-t border-gray-200 pt-4">
+                            {/* <div className="border-t border-gray-200 pt-4">
                                 <p className="text-xs text-gray-600 mb-2 font-semibold">PETUNJUK:</p>
                                 <ul className="text-xs text-gray-600 text-left space-y-1">
                                     <li>• Harap menunggu nomor Anda dipanggil</li>
@@ -384,7 +385,7 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
                                     <li>• Jika melewati 3x panggilan, nomor akan dibatalkan</li>
                                     <li>• Tunjukkan tiket ini saat dipanggil</li>
                                 </ul>
-                            </div>
+                            </div> */}
 
                             {/* QR Code for Status Tracking */}
                             <div id="statusAntrian" className="border-t border-gray-200 pt-4 mt-4">
