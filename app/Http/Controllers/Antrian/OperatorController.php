@@ -229,10 +229,11 @@ class OperatorController extends Controller
             ], 404);
         }
 
-        if ($queue->status !== 'called') {
+        // Allow recall for called, completed, and cancelled queues
+        if (!in_array($queue->status, ['called', 'completed', 'cancelled'])) {
             return response()->json([
                 'success' => false,
-                'message' => 'Only called queues can be recalled. Current status: ' . $queue->status
+                'message' => 'Only called, completed, or cancelled queues can be recalled. Current status: ' . $queue->status
             ], 400);
         }
 
@@ -245,10 +246,12 @@ class OperatorController extends Controller
         // }
 
         try {
-            // Update called_at timestamp for re-announcement
+            // Update status to called and timestamp for re-announcement
             $queue->update([
+                'status' => 'called',
                 'called_at' => now(),
-                'called_by' => Auth::id()
+                'called_by' => Auth::id(),
+                'served_at' => null // Reset served_at if it was completed
             ]);
 
             // Refresh the queue to get updated timestamp

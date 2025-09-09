@@ -550,7 +550,6 @@ export default function CompactOperatorDashboard({ counters = [], selectedCounte
                                                     <TableHead className="w-[120px]">No. Antrian</TableHead>
                                                     <TableHead className="w-[120px]">Status</TableHead>
                                                     <TableHead className="w-[100px]">Waktu</TableHead>
-                                                    <TableHead className="w-[200px]">Aksi</TableHead>
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
@@ -573,24 +572,11 @@ export default function CompactOperatorDashboard({ counters = [], selectedCounte
                                                             <TableCell className="text-sm text-gray-500">
                                                                 {formatTime(queue.created_at)}
                                                             </TableCell>
-                                                            <TableCell>
-                                                                {index === 0 && queue.status === 'waiting' && (
-                                                                    <Button
-                                                                        size="sm"
-                                                                        onClick={handleCallNext}
-                                                                        disabled={actionLoading === 'call-next'}
-                                                                        className="bg-blue-600 hover:bg-blue-700"
-                                                                    >
-                                                                        <Play className="h-3 w-3 mr-1" />
-                                                                        Panggil
-                                                                    </Button>
-                                                                )}
-                                                            </TableCell>
                                                         </TableRow>
                                                     ))
                                                 ) : (
                                                     <TableRow>
-                                                        <TableCell colSpan={4} className="text-center py-8">
+                                                        <TableCell colSpan={3} className="text-center py-8">
                                                             <div className="text-gray-500">
                                                                 <Timer className="h-12 w-12 mx-auto mb-3 text-gray-300" />
                                                                 <p className="text-lg font-medium">Tidak ada antrian menunggu</p>
@@ -609,6 +595,7 @@ export default function CompactOperatorDashboard({ counters = [], selectedCounte
                                                     <TableHead className="w-[120px]">Status</TableHead>
                                                     <TableHead className="w-[100px]">Waktu Panggil</TableHead>
                                                     <TableHead className="w-[100px]">Operator</TableHead>
+                                                    <TableHead className="w-[150px]">Aksi</TableHead>
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
@@ -629,11 +616,25 @@ export default function CompactOperatorDashboard({ counters = [], selectedCounte
                                                             <TableCell className="text-sm text-gray-500">
                                                                 {queue.called_by?.name || `User ${queue.called_by?.id || '-'}`}
                                                             </TableCell>
+                                                            <TableCell>
+                                                                {(queue.status === 'completed' || queue.status === 'cancelled') && (
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        onClick={() => handleRecall(queue.id)}
+                                                                        disabled={actionLoading === 'recall'}
+                                                                        className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                                                                    >
+                                                                        <RotateCcw className="h-3 w-3 mr-1" />
+                                                                        Panggil Ulang
+                                                                    </Button>
+                                                                )}
+                                                            </TableCell>
                                                         </TableRow>
                                                     ))
                                                 ) : (
                                                     <TableRow>
-                                                        <TableCell colSpan={4} className="text-center py-8">
+                                                        <TableCell colSpan={5} className="text-center py-8">
                                                             <div className="text-gray-500">
                                                                 <History className="h-12 w-12 mx-auto mb-3 text-gray-300" />
                                                                 <p className="text-lg font-medium">Belum ada riwayat hari ini</p>
