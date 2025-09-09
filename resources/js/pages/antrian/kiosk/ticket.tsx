@@ -60,6 +60,10 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
             // Small delay to ensure the page is fully rendered
             const printTimer = setTimeout(() => {
                 window.print();
+                // Redirect after auto print
+                setTimeout(() => {
+                    window.location.href = `/antrian/kiosk/room/${queue.room_id}/select-counter`;
+                }, 2500);
             }, 1000);
             
             return () => clearTimeout(printTimer);
@@ -69,6 +73,10 @@ export default function KioskTicket({ queue, position, estimated_wait_time }: Pr
     const handlePrint = () => {
         if (canPrint) {
             window.print();
+            // Redirect to select-counter after 2-3 seconds
+            setTimeout(() => {
+                window.location.href = `/antrian/kiosk/room/${queue.room_id}/select-counter`;
+            }, 2500);
         }
     };
 
